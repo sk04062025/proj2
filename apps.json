@@ -1,0 +1,48 @@
+{
+  "api": {
+    "name": "My Backend API",
+    "api_id": "my-backend-api",
+    "org_id": "default",
+    "auth_configs": {
+      "authToken": {
+        "auth_header_name": "Authorization"
+      }
+    },
+    "use_keyless": true, # Allow access without an API key initially for testing
+    "definition": {
+      "location": "header",
+      "key": "x-api-version"
+    },
+    "version_data": {
+      "not_versioned": true,
+      "versions": {
+        "Default": {
+          "name": "Default",
+          "expires": "",
+          "paths": {
+            "ignored": [],
+            "white_list": [],
+            "black_list": []
+          },
+          "use_extended_paths": true
+        }
+      }
+    },
+    "proxy": {
+      "listen_path": "/my-api/",
+      "target_url": "http://mock-api-service:80/",
+      "strip_listen_path": true
+    },
+    "active": true,
+    "tags": [],
+    "oauth_client_id": "",
+    "auth": {
+      "auth_header_name": "Authorization"
+    },
+    "disable_rate_limit": false,
+    "rate_limit_redis_db": 0,
+    "do_not_track": false,
+    "enable_token_generation": false
+  },
+  "status": 1
+}
