@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: tyk-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass "" # No password needed
+
+  tyk-gateway:
+    image: tykio/tyk-gateway:v5.2.1
+    container_name: tyk-gateway
+    ports:
+      - "8080:8080"
+      - "8081:8081" # For Tyk Pump or other internal services if needed
+    environment:
+      TYK_GW_LISTENPORT: 8080
+      TYK_GW_SECRET: "YOUR_TYK_SECRET" # Replace with a strong secret
+      TYK_GW_REDIS_ADDR: redis:6379
+      TYK_GW_REDIS_PASSWORD: "" # No password for Redis
+      TYK_GW_REDIS_DATABASE: 0
+      TYK_GW_REDIS_PREFIX: tyk
+      TYK_GW_STORAGE_ENABLECLUSTER: "false" # For open source, usually false
+      TYK_GW_POLICIES_CACHE_REDIS_PREFIX: tyk-policies
+      TYK_GW_API_ENABLEANALYTICS: "false" # Disable analytics if not using pump
+      TYK_GW_API_USE_REMOTE_MODULES: "false"
+      TYK_GW_LOGLEVEL: "info"
+    depends_on:
+      - redis
+    volumes:
+      - ./tyk.conf:/opt/tyk-gateway/tyk.conf
+      - ./apps:/opt/tyk-gateway/apps # For API definitions
+
+  # This is a simple mock API service for demonstration purposes
+  # In your actual setup, this would be your "REST API service deployed on another server"
+  mock-api-service:
+    image: kennethreitz/httpbin
+    container_name: mock-api-service
+    ports:
+      - "8000:80" # Map host port 8000 to container port 80
+
+volumes:
+  redis_data:
