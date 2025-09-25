@@ -1,0 +1,30 @@
+# my-tyk-apis/my-first-api/catalog-info.yaml
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: my-first-tyk-api
+  description: This is my first API managed by Tyk Gateway and documented in Backstage.
+  tags:
+    - tyk
+    - example
+    - rest
+  links:
+    - url: https://your-tyk-gateway-domain/my-first-api/
+      title: Tyk Gateway Endpoint
+      icon: external-link
+    - url: https://your-tyk-dashboard-domain/api-details/your-api-id-in-tyk
+      title: Manage in Tyk Dashboard
+      icon: dashboard
+  annotations:
+    # This annotation tells Backstage where to find the OpenAPI spec.
+    # It's important for generating documentation.
+    backstage.io/techdocs-ref: dir:.
+    # You might want to add Tyk-specific annotations later for automation
+    tyk.io/api-id: "64e0a6e0242a7800010c23a1" # Example: Replace with your actual Tyk API ID
+spec:
+  type: openapi
+  lifecycle: production
+  owner: my-team
+  system: my-application-system
+  definition:
+    $text: ./openapi.yaml # Points to your OpenAPI specification file
